@@ -8,11 +8,13 @@ Getting Ready:
  * Copy both script files (argParser.sh and flash-router_spi.sh) into an empty folder, ensuring both are set executable.
  * Add a custom firmware to this same folder
  * Attach your flash programmer (script tested with a ch341a_spi) to your computer
- * Connect your SOIC8 SOP8 flash clip to the flash chip on your router
+ * Connect your SOIC8 SOP8 flash clip to the flash chip on your router's motherboard
  * Search online to find out what the offset is of the firmware in flash memory for your router (the TL-WR703N, which this was used for, has an offset of 131072 (0x20000) bytes)
 
 Performing the flash:
 ------------
+Go online and search around to find out what the offset of the firmware in your router's flash chip is! You're going to need this so that the script know where to place your firmware in the router's flash memory.
+
 Open a shell inside your folder and run  
 `./flash-router_spi.sh -p YOUR-PROGRAMMER -f YOUR-FIRMWARE -o OFFSET-OF-FIRMWARE-IN-MEMORY`
 If you don't specify the programmer, the script will assume you're using a ch341a_spi programmer. To get a list of all supported programmers, run `man flashrom`
