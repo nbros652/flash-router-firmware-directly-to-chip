@@ -71,14 +71,17 @@ clear
 # specify what actions will be attempted based on user input
 status "Operation Pending: write $customFirmware to router flash at $firmwareOffset using $programmer"
 
-echo
-status "Checking for proper seating of clip on chip"
-while flashrom -p $programmer | grep -q "No EEPROM/flash device found." || ! flashrom -p $programmer > /dev/null 2>&1
-do
-    read -sp "Clip is not seated correctly; re-seat and press [Enter]."
-    echo
-done
-status "Clip is seated properly."
+checkClip() {
+	echo
+	status "Checking for proper seating of clip on chip"
+	while flashrom -p $programmer | grep -q "No EEPROM/flash device found." || ! flashrom -p $programmer > /dev/null 2>&1
+	do
+	    read -sp "Clip is not seated correctly; re-seat and press [Enter]."
+	    echo
+	done
+	status "Clip is seated properly. Don't move anything!"
+}
+checkClip
 
 # start a loop dumping firmware until we have a verified dump
 while :
@@ -112,6 +115,7 @@ read -p "Should I reflash the original dump? [y/N]: " opt
 if [ "${opt,,}" == "y" ]; then
 	echo
 	status "Reverting flash contents"
+	checkClip
 	flashrom -p $programmer -w "$stockFlash"
 else
 	echo
